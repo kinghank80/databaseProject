@@ -134,11 +134,21 @@
             if(mysqli_num_rows($timetable) > 0) {
                 while($row1 = mysqli_fetch_assoc($timetable)) {
                     for($i = $row1['Start']; $i <= $row1['End']; $i++) {
-                        $sql = sprintf("SELECT Is_required FROM courses WHERE Cid = %d", $row1['Cid']);
-                        $res_required = mysqli_fetch_assoc(mysqli_query($conn, $sql));
-                        if($res_required['Is_required'] == 1){
-                            $table[$i][$row1['Week']] = "*" . $row1['Cid'] . " " . $row1['Course_name'];
-                        }else if($res_required['Is_required'] == 0){
+                        $sql = sprintf("SELECT * FROM courses WHERE Cid = %d", $row1['Cid']);
+                        $res_courses = mysqli_fetch_assoc(mysqli_query($conn, $sql));
+                        if($res_courses['Is_required'] == 1){
+                            if($res_courses['Cid'][0] == 1 && $_SESSION['student']['Grade'] == '一'){
+                                $table[$i][$row1['Week']] = "*" . $row1['Cid'] . " " . $row1['Course_name'];
+                            }else if($res_courses['Cid'][0] == 2 && $_SESSION['student']['Grade'] == '二'){
+                                $table[$i][$row1['Week']] = "*" . $row1['Cid'] . " " . $row1['Course_name'];
+                            }else if($res_courses['Cid'][0] == 3 && $_SESSION['student']['Grade'] == '三'){
+                                $table[$i][$row1['Week']] = "*" . $row1['Cid'] . " " . $row1['Course_name'];
+                            }else if($res_courses['Cid'][0] == 4 && $_SESSION['student']['Grade'] == '四'){
+                                $table[$i][$row1['Week']] = "*" . $row1['Cid'] . " " . $row1['Course_name'];
+                            }else{
+                                $table[$i][$row1['Week']] = $row1['Cid'] . " " . $row1['Course_name'];
+                            }
+                        }else if($res_courses['Is_required'] == 0){
                             $table[$i][$row1['Week']] = $row1['Cid'] . " " . $row1['Course_name'];
                         }
                     }
